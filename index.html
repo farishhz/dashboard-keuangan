@@ -5,103 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Keuangan</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 20px; max-width: 800px; margin: auto; color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; padding: 20px; max-width: 800px; margin: auto; color: #333; }
         .hidden { display: none; }
         .card { background: #ffffff; padding: 30px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: none; }
-        
-        /* Input & Button Styles */
-        input, select { padding: 12px 15px; margin: 8px 0; width: 100%; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; transition: border-color 0.3s; }
-        input:focus, select:focus { outline: none; border-color: #4a90e2; }
-        
+        input, select { padding: 12px 15px; margin: 8px 0; width: 100%; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
         button { padding: 12px 25px; cursor: pointer; background: #4a90e2; color: white; border: none; border-radius: 8px; margin-top: 5px; font-weight: 600; font-size: 16px; transition: background 0.3s; width: 100%; }
         button:hover { background: #357abd; }
         button.secondary { background: transparent; color: #4a90e2; border: 1px solid #4a90e2; margin-top: 10px; }
-        button.secondary:hover { background: #eef5fc; }
-        
-        /* Auth Specific Styles */
-        #auth-section { max-width: 400px; margin: 50px auto; text-align: center; }
-        #auth-section h2 { margin-bottom: 25px; color: #2c3e50; }
-        #auth-message { color: #e74c3c; font-size: 0.9em; margin-bottom: 15px; min-height: 20px; }
-        
-        /* Dashboard Styles */
-        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .header-nav h1 { margin: 0; font-size: 1.8rem; color: #2c3e50; }
         .logout-btn { background: #e74c3c; width: auto; padding: 8px 20px; font-size: 14px; }
-        .logout-btn:hover { background: #c0392b; }
-
-        .balance-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(118, 75, 162, 0.3); }
-        .balance-card h3 { margin: 0 0 10px 0; opacity: 0.9; font-weight: 500; }
-        #total-balance { font-size: 2.5rem; font-weight: bold; margin: 0; }
-
-        .transaction-list { list-style: none; padding: 0; margin-top: 15px; }
-        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; transition: background 0.2s; }
-        .transaction-item:hover { background-color: #fafafa; }
-        .transaction-item:last-child { border-bottom: none; }
-        .trans-info h4 { margin: 0 0 5px 0; color: #2c3e50; }
-        .trans-date { font-size: 0.8rem; color: #7f8c8d; }
-        .income { color: #27ae60; font-weight: bold; font-size: 1.1rem; }
-        .expense { color: #c0392b; font-weight: bold; font-size: 1.1rem; }
-        
-        .action-buttons { display: flex; gap: 10px; margin-top: 10px; }
-        .action-buttons button { margin-top: 0; }
+        .transaction-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+        .income { color: green; }
+        .expense { color: red; }
     </style>
 </head>
 <body>
 
     <!-- Halaman Login -->
     <div id="auth-section" class="card">
-        <div style="margin-bottom: 20px;">
-            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#4a90e2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-        </div>
-        <h2>Selamat Datang</h2>
+        <h2>Login / Daftar</h2>
         <input type="email" id="email" placeholder="Email Anda">
         <input type="password" id="password" placeholder="Password Anda">
-        <p id="auth-message"></p>
-        <button onclick="handleLogin()">Masuk</button>
-        <div class="action-buttons">
-            <button class="secondary" onclick="handleSignUp()">Daftar Akun</button>
-        </div>
+        <p id="auth-message" style="color: red;"></p>
+        <button onclick="handleLogin()">Login</button>
+        <button class="secondary" onclick="handleSignUp()">Daftar Akun</button>
     </div>
 
-    <!-- Halaman Dashboard (Hidden awalnya) -->
+    <!-- Halaman Dashboard -->
     <div id="app-section" class="hidden">
-        <div class="header-nav">
-            <h1>Keuangan Saya</h1>
-            <button class="logout-btn" onclick="handleLogout()">Keluar</button>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Dashboard Keuangan</h1>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
 
-        <div class="balance-card card">
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
             <h3>Total Saldo</h3>
-            <p id="total-balance">Rp 0</p>
+            <h2 id="total-balance">Rp 0</h2>
         </div>
 
         <div class="card">
-            <h3>Tambah Transaksi Baru</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div>
-                    <label style="font-size: 0.9em; color: #666; margin-left: 5px;">Nama Transaksi</label>
-                    <input type="text" id="trans-name" placeholder="Contoh: Gaji Bulanan">
-                </div>
-                <div>
-                    <label style="font-size: 0.9em; color: #666; margin-left: 5px;">Jumlah (Rp)</label>
-                    <input type="number" id="trans-amount" placeholder="0">
-                </div>
-            </div>
-            <div>
-                <label style="font-size: 0.9em; color: #666; margin-left: 5px;">Tipe</label>
-                <select id="trans-type">
-                    <option value="income">Pemasukan (+)</option>
-                    <option value="expense">Pengeluaran (-)</option>
-                </select>
-            </div>
-            <button onclick="addTransaction()">Simpan Transaksi</button>
+            <h3>Tambah Transaksi</h3>
+            <input type="text" id="trans-name" placeholder="Nama Transaksi">
+            <input type="number" id="trans-amount" placeholder="Jumlah Uang">
+            <select id="trans-type">
+                <option value="income">Pemasukan (+)</option>
+                <option value="expense">Pengeluaran (-)</option>
+            </select>
+            <button onclick="addTransaction()">Tambah</button>
         </div>
 
         <div class="card">
-            <h3>Riwayat Aktivitas</h3>
-            <ul id="transaction-list" class="transaction-list">
-                <!-- Data akan muncul di sini via JS -->
-            </ul>
+            <h3>Riwayat</h3>
+            <ul id="transaction-list" style="list-style: none; padding: 0;"></ul>
         </div>
     </div>
 
@@ -109,9 +63,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        // 1. KONFIGURASI SUPABASE
-        const SUPABASE_URL = 'https://dwsqptscrsttqemkbjux.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3c3FwdHNjcnN0dHFlbWtianV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4MzI1NDksImV4cCI6MjA4NDQwODU0OX0.u3nFd0_kBp2QAQA9HLgxo9CQmIOEDSS6AmNpctnKq_4';
+        // ==========================================
+        // BAGIAN WAJIB DIISI:
+        // ==========================================
+        const SUPABASE_URL = 'https://dwsqptscrsttqemkbjux.supabase.co'; // GANTI INI
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3c3FwdHNjcnN0dHFlbWtianV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4MzI1NDksImV4cCI6MjA4NDQwODU0OX0.u3nFd0_kBp2QAQA9HLgxo9CQmIOEDSS6AmNpctnKq_4'; // GANTI INI
+        // ==========================================
+
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Element DOM
@@ -120,7 +78,7 @@
         const transactionList = document.getElementById('transaction-list');
         const totalBalanceEl = document.getElementById('total-balance');
 
-        // 2. CEK LOGIN SAAT HALAMAN DIMUAT
+        // Cek Login Saat Halaman Dimuat
         window.addEventListener('load', async () => {
             const { data: { session } } = await supabase.auth.getSession();
             updateUI(session);
@@ -141,22 +99,27 @@
             }
         }
 
-        // 3. AUTHENTICATION (LOGIN & SIGNUP)
+        // Fungsi Login
         async function handleLogin() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const msgEl = document.getElementById('auth-message');
-            
-            if(!email || !password) {
-                msgEl.innerText = "Mohon isi email dan password.";
+
+            if (!email || !password) {
+                msgEl.innerText = "Isi email dan password!";
                 return;
             }
 
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) msgEl.innerText = error.message;
-            else msgEl.innerText = "";
+            if (error) {
+                msgEl.innerText = error.message;
+            } else {
+                msgEl.innerText = "Login berhasil!";
+                // UI akan update otomatis via onAuthStateChange
+            }
         }
 
+        // Fungsi Daftar
         async function handleSignUp() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -167,25 +130,25 @@
                 msgEl.innerText = error.message;
             } else {
                 msgEl.style.color = "green";
-                msgEl.innerText = "Pendaftaran berhasil! Silakan login.";
-                setTimeout(() => msgEl.style.color = "red", 3000);
+                msgEl.innerText = "Berhasil daftar! Silakan login.";
             }
         }
 
+        // Fungsi Logout
         async function handleLogout() {
             await supabase.auth.signOut();
             document.getElementById('email').value = '';
             document.getElementById('password').value = '';
         }
 
-        // 4. CRUD TRANSAKSI
+        // Tambah Transaksi
         async function addTransaction() {
             const name = document.getElementById('trans-name').value;
             const amount = document.getElementById('trans-amount').value;
             const type = document.getElementById('trans-type').value;
             const user = (await supabase.auth.getUser()).data.user;
 
-            if (!name || !amount) return alert("Mohon lengkapi data transaksi.");
+            if (!name || !amount) return alert("Lengkapi data!");
 
             const { error } = await supabase
                 .from('transactions')
@@ -199,6 +162,7 @@
             }
         }
 
+        // Ambil Data
         async function fetchTransactions() {
             const user = (await supabase.auth.getUser()).data.user;
             
@@ -223,27 +187,20 @@
                 const li = document.createElement('li');
                 li.className = 'transaction-item';
                 
-                const amountDisplay = t.type === 'income' ? `+ Rp ${parseInt(t.amount).toLocaleString()}` : `- Rp ${parseInt(t.amount).toLocaleString()}`;
+                const amountDisplay = t.type === 'income' ? `+ Rp ${t.amount}` : `- Rp ${t.amount}`;
                 const colorClass = t.type === 'income' ? 'income' : 'expense';
                 
-                // Hitung Saldo
                 if (t.type === 'income') balance += parseInt(t.amount);
                 else balance -= parseInt(t.amount);
 
-                // Format Tanggal
-                const date = new Date(t.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-
                 li.innerHTML = `
-                    <div class="trans-info">
-                        <h4>${t.name}</h4>
-                        <span class="trans-date">${date}</span>
-                    </div>
+                    <span>${t.name}</span>
                     <span class="${colorClass}">${amountDisplay}</span>
                 `;
                 transactionList.appendChild(li);
             });
 
-            totalBalanceEl.innerText = `Rp ${balance.toLocaleString('id-ID')}`;
+            totalBalanceEl.innerText = `Rp ${balance.toLocaleString()}`;
         }
     </script>
 </body>
